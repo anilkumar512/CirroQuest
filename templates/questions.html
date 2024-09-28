@@ -1,0 +1,100 @@
+{% extends "home.html" %}
+{% block content %}
+<body style="background-color:#9ef0c7;">
+  
+		{% comment %} <center>
+			{% if messages %}
+						
+			{% for message in messages %}
+				<li>
+					<span>{{ message }}</span>
+					<button class="close-btn" onclick="closeMessage(this)">X</button>
+				</li>
+			{% endfor %}
+	  
+	{% endif %}</center> {% endcomment %}
+<center>
+<div class="card mt-5" style="width: 40rem; height: 38em; border-radius: 25px; margin-left:120px;">
+    <div class="card-header">
+        <h2>Questions </h2>
+    </div>
+    <div class="card-body d-flex flex-column" style="background-color: #F5F5F4; border-radius: 25px;">
+        <div class="messages" id="messages">
+            {% for message in data %}
+                <div class="text">
+                    <span>
+                        <strong>{{ message.name }}</strong>:
+                        <a href="{% url 'answers' message.id %}" style="color:black;">{{ message.question }}</a>
+                        <a href="{% url 'follow' message.id message.email %}" style="display: inline-block; padding: 1px 2px; background-color: #1dcaa4; color: #fff; text-decoration: none; border: none; border-radius: 4px;">Follow +</a>
+                     </span>
+                    <span class="muted">
+                        {{ message.time }}
+                    </span>
+                </div><br>
+            {% endfor %}
+        </div>
+        <div class="card-footer" style="background-color: lightblue; border-radius: 25px; border: 1px solid #F2C7A3;">
+            <div class="row mt-auto" style="border-radius: 25px;">
+                <form id="message-form" action="{% url 'question' %}" method='post' >
+                    {% csrf_token %}
+                    <input type="text" rows="3" placeholder="Start typing..." name="message" id="message" onkeydown="sendMessage(event)"/>
+                    <input type="submit" name="send" value="Send" id="send-btn" style="background-color: #0dd672;border: 2px solid #595958;">
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% comment %} <script type="text/javascript">
+    // JavaScript code for handling real-time messaging
+    const messageForm = document.getElementById("message-form");
+    const messageInput = document.getElementById("message");
+
+    // WebSocket connection
+    const socket = new WebSocket("ws://localhost:8000/ws/chat/");
+
+    // Event listener for form submission
+    messageForm.addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get message from input field
+        const message = messageInput.value.trim();
+
+        // Send message to server
+        if (message !== "") {
+            socket.send(message);
+            messageInput.value = ""; // Clear input field after sending
+        }
+    });
+
+    // Event listener for incoming messages
+    socket.addEventListener("message", function(event) {
+        const message = event.data;
+
+        // Display incoming message in messages container
+        const messageElement = document.createElement("div");
+        messageElement.innerHTML = message;
+        document.getElementById("messages").appendChild(messageElement);
+
+        // Scroll to bottom of messages container
+        document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+    });
+
+    // Function to send message on pressing Enter key
+    function sendMessage(event) {
+        if (event && event.key !== "Enter") return;
+        const message = document.getElementById("message");
+        if (message.value == "") return;
+        socket.send(message.value);
+        message.value = "";
+    }
+</script> {% endcomment %}
+</center>
+</body> 
+<script>
+    function closeMessage(btn) {
+        btn.parentNode.style.display = 'none'; // Hide the parent <li> element
+    }
+</script> 
+{% endblock %}

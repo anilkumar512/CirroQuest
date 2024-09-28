@@ -1,0 +1,79 @@
+{% extends "home.html" %}
+{% block content %}
+<title>User Profile Sidebar</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .sidebar {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        top: 15;
+        left: 0;
+        background-color: #dfe4f7;
+        padding-top: 20px;
+        margin-left: 15px;
+    }
+    .sidebar img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%; /* Make the image round */
+        margin-bottom: 20px;
+        margin-left:35px;
+    }
+    .sidebar a {
+        padding: 10px 15px;
+        text-decoration: none;
+        font-size: 18px;
+        color: rgb(10, 10, 10);
+        display: block;
+        
+    }
+    .sidebar a:hover {
+        background-color: #825e9a;
+    }
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    {% for user in data %}
+    <img src="/{{user.profile_picture}}" alt="User Image">
+    <p>Name: {{user.username}}</p>
+    <p>Email: {{user.email}}</p>
+    <!-- <p>Phone: +1234567890</p> -->
+    <p>Coins: {{user.coins}}</p>
+    <p>Followers: {{user.followers}}</p>
+    {% endfor %}
+    <a href="{% url 'updateprofile' %}">Edit Profile</a>
+    <a href="{% url 'password' %}">Change Password</a>
+    <a href="{% url 'logout' %}">Logout</a>
+</div>
+
+<div class="content">
+<center>
+    <h2>My Questions</h2>
+    <br>
+    <!-- Assuming items is a list of items you want to display -->
+    {% for item in question %}
+    <table style="border-collapse: collapse; width: 100%;">
+        <tr>
+          <td style="border: 1px solid black; padding: 10px;">
+            <h4 style="margin: 0; padding: 0;">{{ item.question }}</h4>
+          </td>
+        </tr>
+      </table>
+      
+         <!-- Optional: Add a horizontal line between items -->
+    {% endfor %}
+</center>
+</div>
+
+{% endblock %}
